@@ -14,7 +14,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.OAS_30).apiInfo(
                 new ApiInfoBuilder()
                         .contact(new Contact("Ydh666","","2326028512@qq.com"))
-                        .title("学生信息管理系统API")
+                        .title("信息管理系统API")
                         .build()
         );
     }

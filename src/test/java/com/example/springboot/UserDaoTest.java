@@ -1,7 +1,7 @@
 package com.example.springboot;
 
-import com.example.springboot.Dao.IStudentDao;
-import com.example.springboot.Entity.Student;
+import com.example.springboot.Dao.IUserDao;
+import com.example.springboot.Entity.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,33 +9,31 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 @SpringBootTest
-
-public class StudentDaoTest {
+public class UserDaoTest {
     @Autowired
-    private IStudentDao sDao;
-
+    private IUserDao userDao;
     @Test
-    public void insertStudent() {
-        Student stu =new Student();
+    public void insertUser() {
+        User stu = new User();
         stu.setAge(18);
         stu.setName("小明");
         stu.setPassword("123456");
         stu.setSex(true);
-        sDao.save(stu);//新增
+        userDao.save(stu);//新增
     }
     @Test
-    public void findStudentList(){
-        List<Student> students =sDao.findAll();
+    public void findUserList(){
+        List<User> students =userDao.findAll();
         System.out.println(students.size());//查找
     }
     @Test
     public void loginTest(){
-        Student stu = sDao.findStudentByNameAndPassword("小明","123456");
+        User stu = userDao.findUserByNameAndPassword("小明","123456");
         System.out.println(stu.getName());//登录
     }
     @Test
     public void updateNameById(){
-        Integer Result = sDao.UpdateStudentNameById("小明2",1l);
+        Integer Result = userDao.UpdateUserNameById("小明2",1l);
         System.out.println(Result);//修改
 
 

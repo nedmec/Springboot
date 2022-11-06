@@ -1,23 +1,22 @@
 package com.example.springboot.Dao;
 
 import com.example.springboot.Entity.Student;
+import com.example.springboot.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-public interface IStudentDao extends JpaRepository<Student, Long> {
-    Student findStudentByNameAndPassword(String name, String password);
-
-    Student findStudentById(Long id);
+public interface IUserDao extends JpaRepository<User, Long> {
+    @Transactional
+    @Modifying
+    @Query("update User s set s.name=?1 where s.id=?2")
+    int UpdateUserNameById(String name, Long id);
 
     @Transactional
     @Modifying
-    @Query("update Student s set s.name=?1 where s.id=?2")
-    int UpdateStudentNameById(String name, Long id);
+    @Query("delete from User s  where s.id=?2")
+    int DeleteUserById(Long id);
 
-    @Transactional
-    @Modifying
-    @Query("delete from Student s  where s.id=?2")
-    int DeleteStudentById(Long id);
+    User  findUserByNameAndPassword(String name, String Password);
 }
