@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Iterator;
 import java.util.List;
 
 @SpringBootTest
@@ -30,7 +31,7 @@ public class StudentDaoTest {
     }
     @Test
     public void loginTest(){
-        Student stu = sDao.findStudentByNameAndPassword("小明","123456");
+        Student stu = sDao.findFirstByNameAndPassword("小杨","123456");
         System.out.println(stu.getName());//登录
     }
     @Test
@@ -39,5 +40,22 @@ public class StudentDaoTest {
         System.out.println(Result);//修改
 
 
+    }
+    @Test
+    public void delete(){
+        Integer Result = sDao.deleteStudentByName("小刚");
+        System.out.println(Result);
+    }
+
+    @Test
+    public void getAll(){
+        List<Student> s=sDao.findStudentsBySexBetween(false,true);
+        Iterator iterator = s.iterator();
+        //通过while循环遍历，判断下一个是否有元素
+        while (iterator.hasNext()) {
+            //返回下一个元素
+            Student e = (Student) iterator.next();
+            System.out.println(" "+e.getName());
+        }
     }
 }

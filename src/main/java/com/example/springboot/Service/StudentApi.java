@@ -6,6 +6,9 @@ import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Iterator;
+import java.util.List;
+
 @RestController
 @Api(tags = "学生管理相关接口")
 @CrossOrigin(allowedHeaders = {"*"})
@@ -15,7 +18,7 @@ public class StudentApi {
     private IStudentDao sDao;
     @GetMapping(value = "/login/{name}/{password}")
     public Student login(@PathVariable String name,@PathVariable String password) {
-            Student stu = sDao.findStudentByNameAndPassword(name,password);
+            Student stu = sDao.findFirstByNameAndPassword(name,password);
         return stu;
     }
     @PostMapping(value = "/login")
@@ -28,20 +31,20 @@ public class StudentApi {
             @ApiResponse(code = 200,message = "操作成功",response = Student.class)
     })
     public Student login2(@RequestParam String name,@RequestParam String password) {
-        Student stu = sDao.findStudentByNameAndPassword(name,password);
+        Student stu = sDao.findFirstByNameAndPassword(name,password);
         return stu;
     }
     @PostMapping(value = "/register")
     @ApiOperation("学生注册")
     @ApiImplicitParam(name = "stu",value = "学生用户JSON数据",required = true)
     @ApiResponse(code = 200,message = "操作成功",response = Boolean.class)
-    public boolean registerStudent(@RequestBody Student stu) {
+    public Student registerStudent(@RequestBody Student stu) {
         try {
             sDao.save(stu);
+
         }catch (Exception e){
-            return false;
-        }
-        return true;
+            return stu;
+        }return stu;
     }
     @PutMapping("/update")
     @ApiOperation("学生信息更新")
@@ -57,15 +60,43 @@ public class StudentApi {
     }
     @DeleteMapping("/delete")
     @ApiOperation("学生信息删除")
-    @ApiImplicitParam(name = "id",value = "学生用户id",required = true)
+    @ApiImplicitParam(name = "name",value = "学生用户名",required = true)
     @ApiResponse(code = 200,message = "操作成功",response = Boolean.class)
-    public boolean deleteStudent(@RequestParam Long id){
+    public boolean deleteStudent(@RequestParam String name){
         try {
-            sDao.deleteById(id);
+            sDao.deleteStudentByName(name);
         }catch (Exception e){
             return false;
         }
         return true;
     }
+    @PutMapping("/update2")
+    public boolean updateStudent2(String name,Long id){
+        try {
+            sDao.UpdateStudentNameById(name,id);
+        }catch (Exception e){
+            return false;
+        }return true;
+    }
 
+    @PostMapping("/getAll")
+    @ApiOperation("获取所有学生信息")
+    @ApiResponse(code = 200,message = "操作成功",response = String.class)
+    public String getAll(){
+        String s1="";
+        try {
+            List<Student> s=sDao.findStudentsBySexBetween(false,true);
+
+            Iterator iterator = s.iterator();
+            while (iterator.hasNext()) {
+                Student e = (Student) iterator.next();
+                s1=s1.concat(",");
+                s1=s1.concat(e.getName());
+            }
+
+        }catch (Exception e){
+            return s1;
+        }
+        return s1;
+    }
 }
